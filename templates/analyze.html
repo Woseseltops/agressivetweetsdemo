@@ -1,0 +1,24 @@
+<html>
+<head><title>Agressive tweets demo</title></head>
+<body>
+<p>Status:</p>
+
+<script type="text/javascript">$(document).ready(function() {
+
+function update_log()
+{
+	user = $('.user').val().replace('@','');
+	$.get('log_file',{user: user}, function(data)
+	{
+		$('.logtext').html(data);    
+	}
+}
+
+update_log();
+window.setInterval(update_log,2000);	
+
+</script>
+
+
+</body>
+</html>
