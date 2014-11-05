@@ -3,6 +3,19 @@ import operator
 import os
 import random
 
+class Tweet():
+
+    def __init__(self,tid,created_at,text):
+
+        self.id = tid;
+        self.created_at = created_at;
+        self.text = text;
+
+    def ___repr___(self):
+        values = [self.id,self.created_at,self.text]
+
+        return '\t'.join([str(v) for v in values]);
+
 def get_passwords(filename):
 
     lines = open(filename,'r').readlines();
@@ -38,8 +51,9 @@ def get_all_tweets(user,api=None,passwords='passwords.txt'):
         if len(tweets) < 1:
             no_tweets = True;
         else:
-            for tweet in tweets:
-                tweets_total.append((str(tweet['id']),str(tweet['created_at']),clean_tweet(tweet['text'].encode('utf8'),0)));
+	    for tweet in tweets:
+	        tweets_total.append(Tweet(tweet['id'],tweet['created_at'],
+	                     clean_tweet(tweet['text'].encode('utf8'),0)));
 
         c+= 1;
 
@@ -60,7 +74,7 @@ def get_recent_tweets(user,number,api=None):
         print('Twython is sad :(');
 
     for tweet in tweets:
-        tweets_total.append((str(tweet['id']),str(tweet['created_at']),
+        tweets_total.append(Tweet(tweet['id'],tweet['created_at'],
                              clean_tweet(tweet['text'].encode('utf8'),0)));
 
     return tweets_total;
