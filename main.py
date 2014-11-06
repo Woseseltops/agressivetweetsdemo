@@ -1,5 +1,6 @@
 import cherrypy
 import tweetlib
+from threading import Thread
 
 template_folder = 'templates/';
 log_folder = 'log/';
@@ -17,9 +18,16 @@ class agressive_tweets_demo(object):
     def analyze(self,user):
         """Starts the import and shows the progress""";
 
-        tweets = tweetlib.get_all_tweets(user);
-        tweet_str = [str(tweet) for tweet in tweets];
-        open(data_folder+'user','w').write('\n'.join(tweet_str));
+	def parrallel_analysis():
+	    tweets = tweetlib.get_all_tweets(user);
+	    tweet_str = [str(tweet) for tweet in tweets];
+	    open(data_folder+user,'w').write('\n'.join(tweet_str));
+            self.log('Importing successful.',logfile);
+
+        logfile = open(log_folder+user+'.txt','w',0);
+        self.log('Importing all tweets from '+user,logfile)
+
+        Thread(target=parrallel_analysis).start();
 
         return open(template_folder+'analyze.html').read();
 
@@ -27,8 +35,13 @@ class agressive_tweets_demo(object):
 
     def log_file(self,user):
         """Returns the current logfile for the model creation of a user""";
-        return open(maindir+'/logs/create_model_'+user+'.txt').read();
+        return open(log_folder+user+'.txt').read();
     log_file.exposed = True;
+
+    def log(self,message,logfile):
+        print(message);
+        logfile.write('<p>'+message+'</p>');
+
 
 cherrypy.quickstart(agressive_tweets_demo());
 
