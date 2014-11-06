@@ -11,7 +11,7 @@ class Tweet():
         self.created_at = created_at;
         self.text = text;
 
-    def ___repr___(self):
+    def __repr__(self):
         values = [self.id,self.created_at,self.text]
 
         return '\t'.join([str(v) for v in values]);
