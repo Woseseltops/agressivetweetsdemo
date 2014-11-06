@@ -1,24 +1,43 @@
 <html>
 <head><title>Agressive tweets demo</title></head>
-<body>
-<p>Status:</p>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
-<script type="text/javascript">$(document).ready(function() {
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+function get_url_param(sParam)
+{
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) 
+    {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam) 
+        {
+            return sParameterName[1];
+        }
+    }
+}
 
 function update_log()
 {
-	user = $('.user').val().replace('@','');
+	user = get_url_param('user').replace('@','');
 	$.get('log_file',{user: user}, function(data)
 	{
-		$('.logtext').html(data);    
-	}
+		$('#logtext').html(data);    
+	});
 }
 
 update_log();
-window.setInterval(update_log,2000);	
+window.setInterval(update_log,1000);	
+
+});
 
 </script>
 
-
+<body>
+<p>Status:</p>
+<div id="logtext"></div>
 </body>
 </html>
