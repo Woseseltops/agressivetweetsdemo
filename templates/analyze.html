@@ -26,6 +26,13 @@ function update_log()
 	$.get('log_file',{user: user}, function(data)
 	{
 		$('#logtext').html(data);    
+
+                //Check if ready
+		if(data.slice(-5) == '!</p>')
+                {
+			window.location.assign('results/'+user)			
+                }
+
 	});
 }
 
