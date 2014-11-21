@@ -27,16 +27,15 @@ class agressive_tweets_demo(object):
             filepath = data_folder+user;
 
 	    open(filepath,'w').write('\n'.join(tweet_str));
-            self.log('Importing successful.',logfile);
+            self.log('Import succesvol.',logfile);
 
-            self.log('Analyzing tweets.',logfile);
+            self.log('Tweets analyseren.',logfile);
             analyzer = Agression_analyzer();
-            results = analyzer.analyze(tweets);
-#            open(result_folder+user,'w').write();
-            self.log('Analysis finished!',logfile);
+            results = analyzer.analyze(tweets,result_folder+user+'.txt');
+            self.log('Analyse voltooid!',logfile);
 
         logfile = open(log_folder+user+'.txt','w',0);
-        self.log('Importing all tweets from '+user,logfile)
+        self.log('Alle tweets importeren van '+user,logfile)
 
         Thread(target=parrallel_analysis).start();
 
@@ -51,13 +50,28 @@ class agressive_tweets_demo(object):
 
     def results(self,user):
         """Returns the result view""";
-        return "These are the results for "+user;
+	
+	table = get_resulttable(user);
+
+        return open(template_folder+'result.html').read().replace('{%TWEETS%}',table).replace('{%USER%}',user);
     results.exposed = True;
 
     def log(self,message,logfile):
         print(message);
         logfile.write('<p>'+message+'</p>');
 
+
+def get_resulttable(user):
+
+	results = open(result_folder+user+'.txt');
+	table = '<table>';
+
+	for line in results:
+		text,score = line.split('\t');
+		table += '<tr><td>'+text+'</td><td>'+score+'</td></tr>';
+
+	table += '</table>';
+	return table;
 
 cherrypy.quickstart(agressive_tweets_demo());
 
