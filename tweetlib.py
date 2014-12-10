@@ -266,3 +266,15 @@ def most_frequent_first(d):
     d.reverse();
 
     return d;
+
+def classify_tweets(classifier,tweets,resultpath):
+
+    #Get a score for all tweets
+    tweets_text = [t.text for t in tweets]
+    results = sorted(classifier.main(tweets_text),key=lambda x: x[2],reverse=True);
+
+    #Write the results away
+    results = [(txt,str(classification),str(score)) for txt,classification,score in results]
+    lines = ['\t'.join(line) for line in results]
+    open(resultpath,'w').write('\n'.join(lines))
+

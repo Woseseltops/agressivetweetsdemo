@@ -1,7 +1,7 @@
 import cherrypy
 import tweetlib
 from threading import Thread
-from agression_analyzer import Agression_analyzer
+from classify_aggression import Classifier
 
 template_folder = 'templates/';
 log_folder = 'log/';
@@ -30,8 +30,8 @@ class agressive_tweets_demo(object):
             self.log('Import succesvol.',logfile);
 
             self.log('Tweets analyseren.',logfile);
-            analyzer = Agression_analyzer();
-            results = analyzer.analyze(tweets,result_folder+user+'.txt');
+            classifier = Classifier();
+            results = tweetlib.classify_tweets(classifier,tweets,result_folder+user+'.txt');
             self.log('Analyse voltooid!',logfile);
 
         logfile = open(log_folder+user+'.txt','wb',0);
