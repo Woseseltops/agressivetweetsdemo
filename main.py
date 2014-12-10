@@ -20,21 +20,21 @@ class agressive_tweets_demo(object):
     def analyze(self,user):
         """Starts the import and shows the progress""";
 
-    def parrallel_analysis():
-        tweets = tweetlib.get_all_tweets(user);
-        tweet_str = [str(tweet) for tweet in tweets];
+        def parrallel_analysis():
+            tweets = tweetlib.get_all_tweets(user);
+            tweet_str = [str(tweet) for tweet in tweets];
 
-        filepath = data_folder+user;
+            filepath = data_folder+user;
 
-        open(filepath,'w').write('\n'.join(tweet_str));
-        self.log('Import succesvol.',logfile);
+            open(filepath,'w').write('\n'.join(tweet_str));
+            self.log('Import succesvol.',logfile);
 
-        self.log('Tweets analyseren.',logfile);
-        analyzer = Agression_analyzer();
-        results = analyzer.analyze(tweets,result_folder+user+'.txt');
-        self.log('Analyse voltooid!',logfile);
+            self.log('Tweets analyseren.',logfile);
+            analyzer = Agression_analyzer();
+            results = analyzer.analyze(tweets,result_folder+user+'.txt');
+            self.log('Analyse voltooid!',logfile);
 
-        logfile = open(log_folder+user+'.txt','w',0);
+        logfile = open(log_folder+user+'.txt','wb',0);
         self.log('Alle tweets importeren van '+user,logfile)
 
         Thread(target=parrallel_analysis).start();
@@ -45,7 +45,11 @@ class agressive_tweets_demo(object):
 
     def log_file(self,user):
         """Returns the current logfile for the model creation of a user""";
-        return open(log_folder+user+'.txt').read();
+        try:
+            return open(log_folder+user+'.txt').read();
+        except IOError:
+            return '';
+
     log_file.exposed = True;
 
     def results(self,user):
@@ -58,7 +62,8 @@ class agressive_tweets_demo(object):
 
     def log(self,message,logfile):
         print(message);
-        logfile.write('<p>'+message+'</p>');
+        logstr = '<p>'+message+'</p>';
+        logfile.write(logstr.encode());
 
 
 def get_resulttable(user):
@@ -67,7 +72,7 @@ def get_resulttable(user):
     table = '<table>';
 
     for line in results:
-        text,score = line.split('\t');
+        text,classification,score = line.split('\t');
         table += '<tr><td>'+text+'</td><td>'+score+'</td></tr>';
 
     table += '</table>';

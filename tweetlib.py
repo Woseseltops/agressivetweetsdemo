@@ -82,7 +82,7 @@ def get_recent_tweets(user,number,api=None):
 def clean_tweet(tweet,severity=2):
     """Removes links, hastags, smilies, addressees""";
 
-    result = tweet.replace('\n','');
+    result = str(tweet).replace('\n','');
 
     if severity > 1:
         triggers = ['@','#','http',':',';'];
@@ -124,7 +124,7 @@ def is_private(tweeter,api=None):
     if api==None:
         api = t.Twython();
 
-    return api.lookupUser(screen_name = tweeter)[0][u'protected'];
+    return api.lookupUser(screen_name = tweeter)[0]['protected'];
 
 def is_dutch(tweet,word_list = None):
     """Returns whether a tweet is Dutch or not""";

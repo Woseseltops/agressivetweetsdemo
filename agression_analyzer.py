@@ -1,5 +1,4 @@
 from sklearn.externals import joblib
-import classify_agression
 import random
 import codecs
 import classify_aggression
