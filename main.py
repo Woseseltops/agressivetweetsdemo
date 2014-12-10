@@ -13,26 +13,26 @@ class agressive_tweets_demo(object):
     def index(self):
         """"Shows the mainpage""";
 
-	return open(template_folder+'enter_user.html').read();
+        return open(template_folder+'enter_user.html').read();
 
     index.exposed = True;
 
     def analyze(self,user):
         """Starts the import and shows the progress""";
 
-	def parrallel_analysis():
-	    tweets = tweetlib.get_all_tweets(user);
-	    tweet_str = [str(tweet) for tweet in tweets];
+    def parrallel_analysis():
+        tweets = tweetlib.get_all_tweets(user);
+        tweet_str = [str(tweet) for tweet in tweets];
 
-            filepath = data_folder+user;
+        filepath = data_folder+user;
 
-	    open(filepath,'w').write('\n'.join(tweet_str));
-            self.log('Import succesvol.',logfile);
+        open(filepath,'w').write('\n'.join(tweet_str));
+        self.log('Import succesvol.',logfile);
 
-            self.log('Tweets analyseren.',logfile);
-            analyzer = Agression_analyzer();
-            results = analyzer.analyze(tweets,result_folder+user+'.txt');
-            self.log('Analyse voltooid!',logfile);
+        self.log('Tweets analyseren.',logfile);
+        analyzer = Agression_analyzer();
+        results = analyzer.analyze(tweets,result_folder+user+'.txt');
+        self.log('Analyse voltooid!',logfile);
 
         logfile = open(log_folder+user+'.txt','w',0);
         self.log('Alle tweets importeren van '+user,logfile)
@@ -51,7 +51,7 @@ class agressive_tweets_demo(object):
     def results(self,user):
         """Returns the result view""";
 	
-	table = get_resulttable(user);
+        table = get_resulttable(user);
 
         return open(template_folder+'result.html').read().replace('{%TWEETS%}',table).replace('{%USER%}',user);
     results.exposed = True;
@@ -63,15 +63,15 @@ class agressive_tweets_demo(object):
 
 def get_resulttable(user):
 
-	results = open(result_folder+user+'.txt');
-	table = '<table>';
+    results = open(result_folder+user+'.txt');
+    table = '<table>';
 
-	for line in results:
-		text,score = line.split('\t');
-		table += '<tr><td>'+text+'</td><td>'+score+'</td></tr>';
+    for line in results:
+        text,score = line.split('\t');
+        table += '<tr><td>'+text+'</td><td>'+score+'</td></tr>';
 
-	table += '</table>';
-	return table;
+    table += '</table>';
+    return table;
 
 cherrypy.quickstart(agressive_tweets_demo());
 
