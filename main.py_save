@@ -8,13 +8,16 @@ log_folder = 'log/';
 data_folder = 'tweets/';
 result_folder = 'result/';
 
+cherrypy.config.update({'environment': 'embedded'});
+
 class agressive_tweets_demo(object):
 
     def index(self):
         """"Shows the mainpage""";
 
         return open(template_folder+'enter_user.html').read();
-    index.exposed = True
+
+    index.exposed = True;
 
     def analyze(self,user):
         """Starts the import and shows the progress""";
@@ -33,13 +36,14 @@ class agressive_tweets_demo(object):
             results = tweetlib.classify_tweets(classifier,tweets,result_folder+user+'.txt');
             self.log('Analyse voltooid!',logfile);
 
-        logfile = open(log_folder+user+'.txt','w',0);
+        logfile = open(log_folder+user+'.txt','wb',0);
         self.log('Alle tweets importeren van '+user,logfile)
 
         Thread(target=parrallel_analysis).start();
 
         return open(template_folder+'analyze.html').read();
-    analyze.exposed = True
+
+    analyze.exposed = True;
 
     def log_file(self,user):
         """Returns the current logfile for the model creation of a user""";
@@ -47,18 +51,34 @@ class agressive_tweets_demo(object):
             return open(log_folder+user+'.txt').read();
         except IOError:
             return '';
-    log_file.exposed = True
+
+    log_file.exposed = True;
+
+    def results(self,user):
+        """Returns the result view""";
+	
+        table = get_resulttable(user);
+
+        return open(template_folder+'result.html').read().replace('{%TWEETS%}',table).replace('{%USER%}',user);
+    results.exposed = True;
 
     def log(self,message,logfile):
         print(message);
         logstr = '<p>'+message+'</p>';
         logfile.write(logstr.encode());
 
-#Standalone
-if __name__ == '__main__':
-    cherrypy.quickstart(agressive_tweets_demo());
 
-#Apache
-else:
-    cherrypy.config.update({'environment': 'embedded','request.show_tracebacks': True});
-    application = cherrypy.Application(agressive_tweets_demo(), script_name=None, config=None)
+def get_resulttable(user):
+
+    results = open(result_folder+user+'.txt');
+    table = '<table>';
+
+    for line in results:
+        text,classification,score = line.split('\t');
+        table += '<tr><td>'+text+'</td><td>'+score+'</td></tr>';
+
+    table += '</table>';
+    return table;
+
+#cherrypy.quickstart(agressive_tweets_demo());
+application = cherrypy.Application(agressivetweetsdemo(), script_name=None, config=None)
