@@ -16,6 +16,14 @@ class agressive_tweets_demo(object):
         return open(template_folder+'enter_user.html').read();
     index.exposed = True
 
+    def results(self,user):
+        """Returns the result view""";
+
+        table = get_resulttable(user);
+
+        return open(template_folder+'result.html').read().replace('{%TWEETS%}',table).replace('{%USER%}',user);
+    results.exposed = True;
+
     def analyze(self,user):
         """Starts the import and shows the progress""";
 
@@ -54,6 +62,18 @@ class agressive_tweets_demo(object):
         logstr = '<p>'+message+'</p>';
         logfile.write(logstr.encode());
 
+def get_resulttable(user):
+
+    results = open(result_folder+user+'.txt');
+    table = '<table>';
+
+    for line in results:
+        text,classification,score = line.split('\t');
+        table += '<tr><td>'+text+'</td><td>'+score+'</td></tr>';
+
+    table += '</table>';
+    return table;
+
 #Standalone
 if __name__ == '__main__':
     cherrypy.quickstart(agressive_tweets_demo());
@@ -62,3 +82,4 @@ if __name__ == '__main__':
 else:
     cherrypy.config.update({'environment': 'embedded','request.show_tracebacks': True});
     application = cherrypy.Application(agressive_tweets_demo(), script_name=None, config=None)
+

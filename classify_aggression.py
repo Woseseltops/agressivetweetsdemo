@@ -1,13 +1,16 @@
 from sklearn.externals import joblib
 import ucto
 import re
+import cPickle
+import codecs
 
 class Classifier:
 
     def __init__(self):
-        self.clf = joblib.load("model.joblib.pkl")
+        clfmodel = open('model.joblib.pkl', 'rb')      
+        self.clf = cPickle.load(clfmodel)
         self.vocabulary = {}
-        vocabularyfile = open("vocabulary.txt",mode = "r",encoding = "utf-8")
+        vocabularyfile = codecs.open("vocabulary.txt","r","utf-8")
         for i,line in enumerate(vocabularyfile.readlines()):
             self.vocabulary[line.strip()] = i
         vocabularyfile.close()
@@ -19,7 +22,7 @@ class Classifier:
         vectors = []
         vectorframe = [float(0)] * self.vocab_size
         for text in texts:
-            self.tokenizer.process(text)
+            self.tokenizer.process(unicode(text.decode('cp1252','ignore')))
             tokens = [x.text for x in self.tokenizer]
             for i,token in enumerate(tokens):
                 if token[0] == "@":
