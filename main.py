@@ -2,13 +2,14 @@ import cherrypy
 import tweetlib
 from threading import Thread
 from classify_aggression import Classifier
+import sys
 
 template_folder = 'templates/';
 log_folder = 'log/';
 data_folder = 'tweets/';
 result_folder = 'result/';
 
-class agressive_tweets_demo(object):
+class AggressiveTweetsDemo(object):
 
     def index(self):
         """"Shows the mainpage""";
@@ -75,11 +76,12 @@ def get_resulttable(user):
     return table;
 
 #Standalone
-if __name__ == '__main__':
-    cherrypy.quickstart(agressive_tweets_demo());
+if len(sys.argv) > 1 and sys.argv[1] == '--standalone':
+    cherrypy.quickstart(AggressiveTweetsDemo());
 
 #Apache
 else:
-    cherrypy.config.update({'environment': 'embedded','request.show_tracebacks': True});
-    application = cherrypy.Application(agressive_tweets_demo(), script_name=None, config=None)
+    print('To run this as standalone, add --standalone');
 
+    cherrypy.config.update({'environment': 'embedded'});
+    application = cherrypy.Application(AggressiveTweetsDemo(),script_name=None,config=None,)
