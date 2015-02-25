@@ -1,13 +1,26 @@
+import sys
 import cherrypy
 import tweetlib
 from threading import Thread
+
+from ctypes import cdll 
+for library in ['libticcutils.so.2','libfolia.so.3','libucto.so.2']:
+	lib_path = '/var/www2/aggrestweets/live/virtualenv/aggrestweets/lib/'+library;
+	print(lib_path);
+	cdll.LoadLibrary(lib_path); 
+
 from classify_aggression import Classifier
-import sys
 
 template_folder = 'templates/';
 log_folder = 'log/';
 data_folder = 'tweets/';
 result_folder = 'result/';
+
+class Test(object):
+
+	def index(self):
+		return "hoi";
+	index.exposed = True;
 
 class AggressiveTweetsDemo(object):
 
