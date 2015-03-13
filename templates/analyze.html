@@ -1,6 +1,15 @@
 <html>
 <head><title>Agressive tweets demo</title></head>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<!-- jQuery -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<!-- Own style -->
+<link rel="stylesheet" type="text/css" href="../static/main.css">
+
+<!-- Fonts -->
+<link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fanwood+Text' rel='stylesheet' type='text/css'>
 
 <script type="text/javascript">
 
@@ -25,13 +34,27 @@ function update_log()
 	user = get_url_param('user').replace('@','');
 	$.get('log_file',{user: user}, function(data)
 	{
-		$('#logtext').html(data);    
+		reverse_lines = data.split('\n').reverse();
 
-                //Check if ready
-		if(data.slice(-5) == '!</p>')
-                {
+		$('.current_task').html(reverse_lines[1]);    
+
+		previous_tasks = reverse_lines.slice(2);
+		previous_tasks_str = '';
+
+		for (line_index in previous_tasks)
+		{
+		
+			previous_tasks_str = previous_tasks_str + '<p class="previous_task">'+previous_tasks[line_index]+'</p>';
+
+		}
+
+		$('.previous_tasks').html(previous_tasks_str);    
+
+        //Check if ready
+		if(reverse_lines[1] == 'Analyse voltooid!')
+        {
 			window.location.assign('results/'+user)			
-                }
+        }
 
 	});
 }
@@ -44,7 +67,13 @@ window.setInterval(update_log,1000);
 </script>
 
 <body>
-<p>Status:</p>
-<div id="logtext"></div>
+<div class="centerfield">
+
+	<img src="../static/loader.GIF">
+
+	<p class="current_task"></p>
+	<div class="previous_tasks"></div>
+
+</div>
 </body>
 </html>

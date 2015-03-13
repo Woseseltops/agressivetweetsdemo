@@ -1,8 +1,42 @@
 <html>
-<head><title>Agressive tweets demo</title></head>
+<head>
+
+<!-- jQuery -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<!-- WebUI popover -->
+<script src="static/webui-popover.js"></script>
+<link rel="stylesheet" href="static/webui-popover.css">
+
+<script type="text/javascript">
+
+$(document).ready(function()
+{
+	$( ".info" ).click(function() {
+		  $( this ).webuiPopover({title:'Over dit onderzoek.',content:'Een wat langere text',animation:'pop','placement':'top'});
+	});
+});
+
+</script>
+
+<!-- Own style -->
+<link rel="stylesheet" type="text/css" href="static/main.css">
+
+<!-- Fonts -->
+<link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fanwood+Text' rel='stylesheet' type='text/css'>
+
+<title>Agressive tweets demo</title>
+</head>
 <body>
-<p>Voor welke Twittergebruiker wil je de aggressiviteit laten uitrekenen?</p>
-<p>@<form action="analyze"><input name="user"><input type="submit"></form></p>
+
+	<div class="mainframe">
+		<h1>Hoe agressief tweet jij?</h1>
+		<div class="enterfield"><form action="analyze"><label>@</label><input name="user" class="text-input"><input class="button" type="submit" value="Analyzeer!"></form></div>
+
+		<div class="info">i</div>
+
+	</div>
 
 </body>
 </html>
