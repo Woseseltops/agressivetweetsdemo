@@ -15,6 +15,7 @@ template_folder = 'templates/';
 log_folder = 'log/';
 data_folder = 'tweets/';
 result_folder = 'result/';
+static_folder = '/var/www2/aggrestweets/live/repo/aggrestweets/static/';
 
 class Test(object):
 
@@ -29,6 +30,10 @@ class AggressiveTweetsDemo(object):
 
         return open(template_folder+'enter_user.html').read();
     index.exposed = True
+
+    def static_old(self,filename):
+        return open(static_folder+filename).read();
+    static_old.exposed = True
 
     def results(self,user):
         """Returns the result view""";
@@ -73,7 +78,7 @@ class AggressiveTweetsDemo(object):
 
     def log(self,message,logfile):
         print(message);
-        logstr = '<p>'+message+'</p>';
+        logstr = message+'\n';
         logfile.write(logstr.encode());
 
 def get_resulttable(user):
@@ -81,12 +86,19 @@ def get_resulttable(user):
     results = open(result_folder+user+'.txt');
     table = '<table>';
 
-    for line in results:
-        text,classification,score = line.split('\t');
-        table += '<tr><td>'+text+'</td><td>'+score+'</td></tr>';
+    for n,line in enumerate(results):
+        tid,score = line.split('\t');
+        table += '<tr><td>'+id_to_embedded_tweet(tid)+'</td><td>'+score+'</td></tr>';
+
+        if n > 15:
+	        break;
 
     table += '</table>';
     return table;
+
+def id_to_embedded_tweet(tid):
+
+	return '<blockquote class="twitter-tweet" lang="nl"><a href="https://twitter.com/antalvdb/status/'+tid+'"></a></blockquote>'
 
 #Standalone
 if len(sys.argv) > 1 and sys.argv[1] == '--standalone':
@@ -97,4 +109,4 @@ else:
     print('To run this as standalone, add --standalone');
 
     cherrypy.config.update({'environment': 'embedded'});
-    application = cherrypy.Application(AggressiveTweetsDemo(),script_name=None,config=None,)
+    application = cherrypy.Application(AggressiveTweetsDemo(),script_name=None,config={'/static':{'tools.staticdir.on':True,'tools.staticdir.dir':static_folder}})
