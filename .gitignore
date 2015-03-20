@@ -57,3 +57,7 @@ twython/*
 oauthlib/*
 requests/*
 cherrypy/*
+
+*~
+log
+passwords.txt
