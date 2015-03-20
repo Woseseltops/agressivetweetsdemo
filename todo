@@ -1,3 +1,19 @@
-* Function to go back to classify another
+Main page
+* Fix info button
+* Add examples
+* 'Analyzeer' -> 'Analyseer'
+
+Analyze page
 * User that does not exist does not give an error 
-* display percentage of aggressive tweets 
+* Cache results that are less than a week old
+
+Result page
+* Home and infobutton
+* Per 20
+* Display agressometer
+* Tweet fucntion
+* usernames niet met een hoofdletter laten zien op de resultatenpagina, en met @ - dus niet Antalvdb maar @antalvdb
+
+Correct page
+* Create
+* Make clear: help research
