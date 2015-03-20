@@ -1,23 +1,37 @@
+asdf;
+
 import cherrypy
 import tweetlib
 from threading import Thread
 from classify_aggression import Classifier
+import sys
 
 template_folder = 'templates/';
 log_folder = 'log/';
 data_folder = 'tweets/';
 result_folder = 'result/';
 
-cherrypy.config.update({'environment': 'embedded'});
+class Test(object):
 
-class agressive_tweets_demo(object):
+	def index(self):
+		return "hoi";
+	index.exposed = True;
+
+class AggressiveTweetsDemo(object):
 
     def index(self):
         """"Shows the mainpage""";
 
         return open(template_folder+'enter_user.html').read();
+    index.exposed = True
 
-    index.exposed = True;
+    def results(self,user):
+        """Returns the result view""";
+
+        table = get_resulttable(user);
+
+        return open(template_folder+'result.html').read().replace('{%TWEETS%}',table).replace('{%USER%}',user);
+    results.exposed = True;
 
     def analyze(self,user):
         """Starts the import and shows the progress""";
@@ -36,14 +50,13 @@ class agressive_tweets_demo(object):
             results = tweetlib.classify_tweets(classifier,tweets,result_folder+user+'.txt');
             self.log('Analyse voltooid!',logfile);
 
-        logfile = open(log_folder+user+'.txt','wb',0);
+        logfile = open(log_folder+user+'.txt','w',0);
         self.log('Alle tweets importeren van '+user,logfile)
 
         Thread(target=parrallel_analysis).start();
 
         return open(template_folder+'analyze.html').read();
-
-    analyze.exposed = True;
+    analyze.exposed = True
 
     def log_file(self,user):
         """Returns the current logfile for the model creation of a user""";
@@ -51,22 +64,12 @@ class agressive_tweets_demo(object):
             return open(log_folder+user+'.txt').read();
         except IOError:
             return '';
-
-    log_file.exposed = True;
-
-    def results(self,user):
-        """Returns the result view""";
-	
-        table = get_resulttable(user);
-
-        return open(template_folder+'result.html').read().replace('{%TWEETS%}',table).replace('{%USER%}',user);
-    results.exposed = True;
+    log_file.exposed = True
 
     def log(self,message,logfile):
         print(message);
         logstr = '<p>'+message+'</p>';
         logfile.write(logstr.encode());
-
 
 def get_resulttable(user):
 
@@ -80,5 +83,13 @@ def get_resulttable(user):
     table += '</table>';
     return table;
 
-#cherrypy.quickstart(agressive_tweets_demo());
-application = cherrypy.Application(agressivetweetsdemo(), script_name=None, config=None)
+#Standalone
+if len(sys.argv) > 1 and sys.argv[1] == '--standalone':
+    cherrypy.quickstart(AggressiveTweetsDemo());
+
+#Apache
+else:
+    print('To run this as standalone, add --standalone');
+
+    cherrypy.config.update({'environment': 'embedded'});
+    application = cherrypy.Application(Test(),script_name=None,config=None,)
