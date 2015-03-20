@@ -3,13 +3,20 @@
 body
 {
 	background: url("tiger.jpg") no-repeat;
+    background-attachment: fixed;
 	background-size: 100%;
 	font-family: 'Fanwood Text';
 }
 
-h1,input
+h1,h2,input, a:link
 {
 	color: #f1ece6;
+}
+
+h1, h2
+{
+	font-size: 100;
+	font-weight:normal;
 }
 
 input,label,.centerfield
@@ -28,12 +35,6 @@ input,label,.centerfield
 }
 
 /* Specific colors and fonts */
-
-h1
-{
-	font-size: 100;
-	font-weight:normal;
-}
 
 .centerfield
 {
@@ -73,6 +74,35 @@ label,.previous_task
 	cursor: pointer;
 }
 
+.aggression_score
+{
+	font-family: Muli;
+	color: white;
+	font-size: 30px;
+}
+
+.high_aggressive
+{
+	background-color: rgb(168,63,17);
+}
+
+.medium_aggressive
+{
+	background-color: rgb(200,174,14);
+}
+
+.low_aggressive
+{
+	background-color: rgb(129,174,14);
+}
+
+
+.correct
+{
+	font-family: Muli;
+	font-size: 15px;
+}
+
 /* Sizes and positions */
 
 .mainframe, .centerfield
@@ -85,6 +115,11 @@ label,.previous_task
 .mainframe
 {
 	width: 1000px;
+}
+
+#results
+{
+	margin-top: 50px;
 }
 
 .centerfield
@@ -105,6 +140,12 @@ input,label
 input:focus
 {
 	outline: 0;
+}
+
+.tweet
+{
+	width: 500px;
+	margin: auto;
 }
 
 .button:hover
@@ -146,4 +187,24 @@ label
 	height: 50px;
 	margin: auto;
 	margin-top: 112px;
+}
+
+.aggression_score
+{
+	width: 70px;
+	height: 55px;
+	padding-top: 15px;
+	border-radius: 20px;
+	position: relative;
+	margin-left: 213px;
+	margin-top: -40px;
+}
+
+.correct
+{
+	text-align: right;
+	position: relative;
+	margin-right: 265px;
+	margin-top: -35px;
+	margin-bottom: 50px;
 }
