@@ -1,6 +1,8 @@
 import sys
 import cherrypy
 import tweetlib
+import time
+import json
 from threading import Thread
 
 from ctypes import cdll 
@@ -15,15 +17,10 @@ TEMPLATE_FOLDER = 'templates/';
 LOG_FOLDER = 'log/';
 DATA_FOLDER = 'tweets/';
 RESULT_FOLDER = 'result/';
+CORRECTIONS_FOLDER = 'corrections/';
 STATIC_FOLDER = '/var/www2/aggrestweets/live/repo/aggrestweets/static/';
 THRESHOLD_HIGH = 0.6;
 THRESHOLD_MEDIUM = 0.4;
-
-class Test(object):
-
-	def index(self):
-		return "hoi";
-	index.exposed = True;
 
 class AggressiveTweetsDemo(object):
 
@@ -42,7 +39,7 @@ class AggressiveTweetsDemo(object):
 
         table = results_to_html(user,0,20);
 
-        return open(TEMPLATE_FOLDER+'result.html').read().replace('{%TWEETS%}',table).replace('{%USER%}',user.capitalize());
+        return open(TEMPLATE_FOLDER+'result.html').read().replace('{%TWEETS%}',table).replace('{%USER%}','@'+user);
     results.exposed = True;
 
     def analyze(self,user):
@@ -78,6 +75,39 @@ class AggressiveTweetsDemo(object):
             return '';
     log_file.exposed = True
 
+    def correct(self,user,tweet_id,our_prediction,timestamp,correction=None):
+
+        if correction == None:
+
+            home_link = 'results/'+user;
+
+            prediction_to_number = {'low_aggressive':'0','medium_aggressive':'1','high_aggressive':'2'};
+
+            content = open(TEMPLATE_FOLDER+'correct.html').read();
+
+            for placeholder, replacement in [('{%TWEET_ID%}',tweet_id),
+                                             ('{%OUR_CLASSIFICATION%}',prediction_to_number[our_prediction]),
+                                             ('{%HOME_LINK%}',home_link)
+                                             ]:
+
+                content = content.replace(placeholder,replacement);
+
+            return content;
+
+        else:
+
+            dict_with_all_info = {'twitterID':user,
+                                  'tweetID':tweet_id,
+                                  'ourClassification':our_prediction,
+                                  'theirClassification':correction,
+                                  'ourClassificationTimeStamp':timestamp};
+
+            json.dump(dict_with_all_info,open(CORRECTIONS_FOLDER+user+'.'+timestamp+'.json','w'));
+
+            return open(TEMPLATE_FOLDER+'thanks.html').read();
+
+    correct.exposed = True
+
     def log(self,message,logfile):
         print(message);
         logstr = message+'\n';
@@ -87,13 +117,13 @@ def results_to_html(user,fro,to):
 
     results = open(RESULT_FOLDER+user+'.txt').readlines();
     html = '';
+    timestamp = str(time.time());
 
     for n,line in enumerate(results[fro:to]):
         tid,score = line.split('\t');
         score = float(score);
         simplified_score = int(round(score,2)*100);
-        
-        print(score,THRESHOLD_HIGH,score > THRESHOLD_HIGH);
+       
 
         if score > THRESHOLD_HIGH:
             aggression_group = "high_aggressive";
@@ -102,7 +132,7 @@ def results_to_html(user,fro,to):
         else:
             aggression_group = "low_aggressive";
 
-        html += '<div class="tweet" id="'+ tid +'"></div><div class="aggression_score '+aggression_group+'">'+str(simplified_score)+'</div><div class="correct"><a href="correct?user=' + user + '&id=' + tid + '">Dit klopt niet!</a></div>';
+        html += '<div class="tweet" id="'+ tid +'"></div><div class="aggression_score aggression_resultfield '+aggression_group+'">'+str(simplified_score)+'</div><div class="correct_text"><a href="../correct?user=' + user + '&tweet_id=' + tid + '&our_prediction=' + aggression_group + '&timestamp=' + timestamp + '">Dit klopt niet!</a></div>';
 
     return html;
 
