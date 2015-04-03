@@ -1,0 +1,78 @@
+<head>
+
+<!-- Twitter's widgets.js -->
+
+<script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<!-- jQuery -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<!-- Own style -->
+<link rel="stylesheet" type="text/css" href="../static/main.css">
+
+<!-- Fonts -->
+<link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fanwood+Text' rel='stylesheet' type='text/css'>
+
+
+<script type="text/javascript">
+//Add the embedded tweets
+$(document).ready(function() 
+{
+	$('.tweet').each( function()
+	{
+		twttr.widgets.createTweet(this.id,this);	
+	});
+
+	//The total set of classifications
+	var classifications = ['low_aggressive','medium_aggressive','high_aggressive'];
+    var classification_labels = ['niet-agressief','twijfelachtig','agressief'];
+
+	//First see what automated classifier said
+	var our_classification_index = {%OUR_CLASSIFICATION%};
+    var our_classification = classifications[our_classification_index];
+	var our_classification_label = classification_labels[our_classification_index];
+
+    //Now see what's left
+    var classification_suggestions = classifications;
+	var classification_suggestion_labels = classification_labels;
+	classification_suggestions.splice(our_classification_index,1);
+	classification_suggestion_labels.splice(our_classification_index,1);	
+
+    //Show our findings in colors
+	$('#our_classification').addClass(our_classification);
+	$('#suggested_classification_1').addClass(classification_suggestions[0]);
+	$('#suggested_classification_2').addClass(classification_suggestions[1]);
+
+    //Show our findings in text
+	$('#our_classification a').html(our_classification_label);
+	$('#suggested_classification_1 a').html(classification_suggestion_labels[0]);
+	$('#suggested_classification_2 a').html(classification_suggestion_labels[1]);
+
+	//Add links
+	$('#suggested_classification_1 a').attr('href',window.location+'&correction='+classification_suggestions[0]);
+	$('#suggested_classification_2 a').attr('href',window.location+'&correction='+classification_suggestions[1]);
+
+});
+</script>
+
+</head>
+<body>
+
+<div class="mainframe" id="results">
+	<h2>Verbeter ons resultaat</h2>
+
+	<div class="tweet" id="{%TWEET_ID%}"></div>
+
+	<p>Wij zeggen</p>
+	<div class="aggression_resultfield correct_button" id="our_classification"><a href="{%HOME_LINK%}"></a></div>
+
+	<div class="correct_area">
+		<p>Jij zegt</p>	
+		<div class="aggression_resultfield correct_button" id="suggested_classification_1"><a></a></div>
+		<div class="aggression_resultfield correct_button" id="suggested_classification_2"><a></a></div>
+	<div>
+
+</div>
+
+</body>

@@ -8,15 +8,26 @@ body
 	font-family: 'Fanwood Text';
 }
 
-h1,h2,input, a:link
+h1,h2,input, a:link, p
 {
 	color: #f1ece6;
 }
 
 h1, h2
 {
-	font-size: 100;
+	font-size: 95;
 	font-weight:normal;
+}
+
+a:link
+{
+	text-decoration:none;
+	color: white;
+}
+
+a:visited
+{
+	color: white;
 }
 
 input,label,.centerfield
@@ -34,6 +45,18 @@ input,label,.centerfield
 	color:#564738;
 }
 
+label,.previous_task
+{
+	color: #917b62;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
+p
+{
+	font-size: 30px;
+}
+
 /* Specific colors and fonts */
 
 .centerfield
@@ -47,16 +70,10 @@ input,label,.centerfield
 	cursor:pointer;
 }
 
-label,.previous_task
-{
-	color: #917b62;
-	border-top-right-radius: 0px;
-	border-bottom-right-radius: 0px;
-}
-
 .current_task
 {
 	font-size:35px;
+	color: #564738;
 }
 
 .text-input
@@ -74,7 +91,7 @@ label,.previous_task
 	cursor: pointer;
 }
 
-.aggression_score
+.aggression_resultfield
 {
 	font-family: Muli;
 	color: white;
@@ -200,11 +217,29 @@ label
 	margin-top: -40px;
 }
 
-.correct
+.correct_text
 {
 	text-align: right;
 	position: relative;
 	margin-right: 265px;
 	margin-top: -35px;
 	margin-bottom: 50px;
+}
+
+.correct_button
+{
+	padding: 10px;
+	border-radius: 15px;
+	margin: auto;
+	display: inline;
+	padding-left: 30px;
+	padding-right: 30px;
+	margin-left: 40px;
+	margin-right: 40px;
+	cursor: pointer;
+}
+
+.correct_area
+{
+	margin-top:60px;
 }
