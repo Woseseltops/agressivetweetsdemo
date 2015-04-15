@@ -12,9 +12,7 @@
 
 $(document).ready(function()
 {
-	$( ".info" ).click(function() {
-		  $( this ).webuiPopover({title:'Over dit onderzoek.',content:'Een wat langere text',animation:'pop','placement':'top'});
-	});
+	$( ".info" ).webuiPopover({title:'Over dit onderzoek.',content:'Een wat langere text',animation:'pop','placement':'top'});
 });
 
 </script>
@@ -33,8 +31,9 @@ $(document).ready(function()
 	<div class="mainframe">
 		<h1>Hoe agressief tweet jij?</h1>
 		<div class="enterfield"><form action="analyze"><label>@</label><input name="user" class="text-input"><input class="button" type="submit" value="Analyseer!"></form></div>
+		<p id="suggestion">Suggesties: <a href="results/geertwilderspvv">geertwilderspvv</a>, ...</p>
 
-		<div class="info">i</div>
+		<div style="margin-top: 112px;" class="icon info">i</div>
 
 	</div>
 

@@ -8,7 +8,7 @@ body
 	font-family: 'Fanwood Text';
 }
 
-h1,h2,input, a:link, p
+h1,h2,input, a:link, a:visited, p
 {
 	color: #f1ece6;
 }
@@ -19,16 +19,11 @@ h1, h2
 	font-weight:normal;
 }
 
-a:link
+a:link, a:visited
 {
-	text-decoration:none;
-	color: white;
+	text-decoration: none;
 }
 
-a:visited
-{
-	color: white;
-}
 
 input,label,.centerfield
 {
@@ -81,7 +76,7 @@ p
 	color:#564738;
 }
 
-.info
+.icon
 {
 	color: #f1ece6;
 	font-size: 41px;
@@ -198,12 +193,14 @@ label
 	top:3px;
 }
 
-.info
+.icon
 {
 	width: 50px;
 	height: 50px;
 	margin: auto;
-	margin-top: 112px;
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .aggression_score
@@ -242,4 +239,9 @@ label
 .correct_area
 {
 	margin-top:60px;
+}
+
+#suggestion
+{
+	font-size: 20px;
 }
