@@ -102,9 +102,9 @@ class AggressiveTweetsDemo(object):
                                   'theirClassification':correction,
                                   'ourClassificationTimeStamp':timestamp};
 
-            json.dump(dict_with_all_info,open(CORRECTIONS_FOLDER+user+'.'+timestamp+'.json','w'));
+            json.dump(dict_with_all_info,open(CORRECTIONS_FOLDER+user+'.'+tweet_id+'.'+timestamp+'.json','w'));
 
-            return open(TEMPLATE_FOLDER+'thanks.html').read();
+            return open(TEMPLATE_FOLDER+'thanks.html').read().replace('{%TWITTER_USER%}',user);
 
     correct.exposed = True
 
