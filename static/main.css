@@ -13,9 +13,15 @@ h1,h2,input, a:link, a:visited, p
 	color: #f1ece6;
 }
 
-h1, h2
+h1
 {
-	font-size: 95;
+	font-size: 95px;
+	font-weight:normal;
+}
+
+h2
+{
+	font-size: 75px;
 	font-weight:normal;
 }
 
@@ -108,6 +114,15 @@ p
 	background-color: rgb(129,174,14);
 }
 
+.aggressometer .high_aggressive
+{
+	background-image: linear-gradient(0deg, rgb(168,63,17) 80%, #b35830 81%)
+}
+
+.aggressometer .low_aggressive
+{
+	background-image: linear-gradient(0deg, rgb(129,174,14) 80%, #91b82d 81%)
+}
 
 .correct
 {
@@ -244,4 +259,67 @@ label
 #suggestion
 {
 	font-size: 20px;
+}
+
+.aggressometer
+{
+	width: 600px;
+	margin: auto;
+	margin-bottom: 100px;
+}
+
+.aggressometer-part
+{
+	height: 50px;
+	display: inline-block;
+	margin: -2px;
+}
+
+.aggressometer .high_aggressive
+{
+	width: 200px;
+	border-top-right-radius: 15px;
+	border-bottom-right-radius: 15px;	
+}
+
+.aggressometer .low_aggressive
+{
+	width: 400px;
+	border-top-left-radius: 15px;
+	border-bottom-left-radius: 15px;	
+}
+
+#photo_container
+{
+	width:65px;
+	margin-top:-4px;
+}
+
+#photo_container #triangle
+{
+    border-color: transparent transparent white transparent;
+    border-style: solid;
+    border-width: 0px 10px 10px 10px;
+    height: 0px;
+    width: 0px;
+	margin:auto;
+}
+
+#user_photo
+{
+	height: 65px;
+	width: 65px;
+	background-color: white;
+	border-radius: 10px;
+}
+
+#photo_container img
+{
+	margin:8px;
+}
+
+.tweetbutton
+{
+	position: relative;
+	top:2px;
 }
