@@ -1,3 +1,4 @@
+import os
 import sys
 import cherrypy
 import tweetlib
@@ -22,6 +23,19 @@ STATIC_FOLDER = '/var/www2/aggrestweets/live/repo/aggrestweets/static/';
 THRESHOLD_HIGH = 0.6;
 THRESHOLD_MEDIUM = 0.4;
 
+# Put this function here temporarily because of caching
+
+def get_profile_image_url(user,api=None,passwords='passwords.txt'):
+
+    import twython as t
+
+    if api==None:
+        passwords = tweetlib.get_passwords(passwords);
+        api = t.Twython(passwords['app_key'], passwords['app_secret'],
+            passwords['oauth_token'], passwords['oauth_token_secret']);        
+
+    return api.show_user(screen_name=user)['profile_image_url'];
+
 class AggressiveTweetsDemo(object):
 
     def index(self):
@@ -37,9 +51,20 @@ class AggressiveTweetsDemo(object):
     def results(self,user):
         """Returns the result view""";
 
-        table = results_to_html(user,0,20);
+        aggresso_score = calculate_aggresso_score(user);
 
-        return open(TEMPLATE_FOLDER+'result.html').read().replace('{%TWEETS%}',table).replace('{%USER%}','@'+user);
+        table = results_to_html(user,0,20);		
+
+        content = open(TEMPLATE_FOLDER+'result.html').read();
+        variables = {'tweets':table,'user':'@'+user,
+                     'profile_image_url':get_profile_image_url(user),
+                     'aggresso_score':int(round(aggresso_score*100)),
+                     'aggresso_margin':aggresso_score*600};        
+
+        for key, value in variables.items():
+            content = content.replace('{%'+key.upper()+'%}',str(value));
+
+        return content;
     results.exposed = True;
 
     def analyze(self,user):
@@ -59,10 +84,14 @@ class AggressiveTweetsDemo(object):
             results = tweetlib.classify_tweets(classifier,tweets,RESULT_FOLDER+user+'.txt');
             self.log('Analyse voltooid!',logfile);
 
-        logfile = open(LOG_FOLDER+user+'.txt','w',0);
-        self.log('Alle tweets importeren van '+user,logfile)
+        result_path = RESULT_FOLDER+user+'.txt';
+        SECONDS_IN_A_MONTH = 2629743;
 
-        Thread(target=parrallel_analysis).start();
+        if not os.path.isfile(result_path) or time.time() - os.path.getmtime(result_path) > SECONDS_IN_A_MONTH:
+            logfile = open(LOG_FOLDER+user+'.txt','w',0);
+            self.log('Alle tweets importeren van '+user,logfile)
+
+            Thread(target=parrallel_analysis).start();
 
         return open(TEMPLATE_FOLDER+'analyze.html').read();
     analyze.exposed = True
@@ -135,6 +164,18 @@ def results_to_html(user,fro,to):
         html += '<div class="tweet" id="'+ tid +'"></div><div class="aggression_score aggression_resultfield '+aggression_group+'">'+str(simplified_score)+'</div><div class="correct_text"><a href="../correct?user=' + user + '&tweet_id=' + tid + '&our_prediction=' + aggression_group + '&timestamp=' + timestamp + '">Dit klopt niet!</a></div>';
 
     return html;
+
+def calculate_aggresso_score(user):
+
+    results = open(RESULT_FOLDER+user+'.txt').readlines();
+    total_score = 0;
+
+    for n,line in enumerate(results[:20]):
+        score = float(line.split('\t')[-1]);
+        simplified_score = int(round(score,2)*100);
+        total_score += score;
+
+    return total_score/20;
 
 #Standalone
 if len(sys.argv) > 1 and sys.argv[1] == '--standalone':
