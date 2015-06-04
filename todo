@@ -1,13 +1,9 @@
-Main page
-* Fix info button
-* Add examples
-
-Analyze page
+* Add more examples
+* Add Twitter rate limit error message
+* Proxies
+* Redesign results page (Aggressometer -> agressometer)
 * User that does not exist does not give an error 
-* Cache results that are less than a week old
-
-Result page
-* Home and infobutton
+* @stoxed too far right
 * Per 20
-* Display agressometer
-* Tweet fucntion
+
+
