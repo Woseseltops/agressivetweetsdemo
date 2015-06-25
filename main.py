@@ -77,7 +77,15 @@ class AggressiveTweetsDemo(object):
 
         def parrallel_analysis():
             chosen_password_file = random.choice(PASSWORD_FILES);
-            tweets = tweetlib.get_all_tweets(user,passwords=chosen_password_file);
+
+            try:
+                tweets = tweetlib.get_all_tweets(user,passwords=chosen_password_file);
+            except: #Any problem
+                self.log('<span class="error">Ai, er is iets mis gegaan! Mogelijk vindt Twitter dat we teveel tweets opvragen,'+\
+                         ' of bestaat het account niet. Kijk hier eens voor wat accounts die het altijd doen: '+\
+                         '<a href="results/geertwilderspvv">geertwilderspvv</a>, <a href="results/sylviawitteman">sylviawitteman</a>, <a href="results/femkehalsema">femkehalsema</a>, <a href="results/willemhoIIeeder">willemhoIIeeder</a></span>',
+                         logfile);
+
             tweet_str = [str(tweet) for tweet in tweets];
 
             filepath = DATA_FOLDER+user;

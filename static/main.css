@@ -58,6 +58,18 @@ p
 	font-size: 30px;
 }
 
+.error
+{
+       color: rgb(168,63,17);
+       font-size: 18px;
+}
+
+.error a:link, .error a:visited 
+{
+       color: rgb(168,63,17);
+       text-decoration: underline;
+}
+
 /* Specific colors and fonts */
 
 .centerfield
