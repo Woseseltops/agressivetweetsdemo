@@ -51,9 +51,13 @@ function update_log()
 		$('.previous_tasks').html(previous_tasks_str);    
 
         //Check if ready
-		if(reverse_lines[1] == 'Analyse voltooid!')
+	  if(reverse_lines[1] == 'Analyse voltooid!')
         {
 			window.location.assign('results/'+user)			
+        }
+        else if(reverse_lines[1].split(' ')[0] == '<span') //The error message has a span tag
+        {
+                     $('img').hide();
         }
 
 	});
