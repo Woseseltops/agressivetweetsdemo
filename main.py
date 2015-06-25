@@ -4,6 +4,7 @@ import cherrypy
 import tweetlib
 import time
 import json
+import random
 from threading import Thread
 
 from ctypes import cdll 
@@ -22,6 +23,8 @@ CORRECTIONS_FOLDER = 'corrections/';
 STATIC_FOLDER = '/var/www2/aggrestweets/live/repo/aggrestweets/static/';
 THRESHOLD_HIGH = 0.6;
 THRESHOLD_MEDIUM = 0.4;
+PASSWORD_FILES_FOLDER = 'password_files/';
+PASSWORD_FILES = [PASSWORD_FILES_FOLDER+file for file in os.listdir(PASSWORD_FILES_FOLDER)];
 
 # Put this function here temporarily because of caching
 
@@ -55,9 +58,11 @@ class AggressiveTweetsDemo(object):
 
         table = results_to_html(user,0,20);		
 
+        chosen_password_file = random.choice(PASSWORD_FILES);
+
         content = open(TEMPLATE_FOLDER+'result.html').read();
         variables = {'tweets':table,'user':'@'+user,
-                     'profile_image_url':get_profile_image_url(user),
+                     'profile_image_url':get_profile_image_url(user,passwords=chosen_password_file),
                      'aggresso_score':int(round(aggresso_score*100)),
                      'aggresso_margin':aggresso_score*600};        
 
@@ -71,7 +76,8 @@ class AggressiveTweetsDemo(object):
         """Starts the import and shows the progress""";
 
         def parrallel_analysis():
-            tweets = tweetlib.get_all_tweets(user);
+            chosen_password_file = random.choice(PASSWORD_FILES);
+            tweets = tweetlib.get_all_tweets(user,passwords=chosen_password_file);
             tweet_str = [str(tweet) for tweet in tweets];
 
             filepath = DATA_FOLDER+user;
