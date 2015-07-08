@@ -75,13 +75,17 @@ class AggressiveTweetsDemo(object):
     def analyze(self,user):
         """Starts the import and shows the progress""";
 
+        #Remove the @ if the user put it in
+        if user[:3] == '%40':
+            user = user[3:];
+
         def parrallel_analysis():
             chosen_password_file = random.choice(PASSWORD_FILES);
 
             try:
                 tweets = tweetlib.get_all_tweets(user,passwords=chosen_password_file);
             except: #Any problem
-                self.log('<span class="error">Ai, er is iets mis gegaan! Mogelijk vindt Twitter dat we teveel tweets opvragen,'+\
+                self.log('<span class="error">Deze tweets kunnen nu niet opgehaald worden. Mogelijk vindt Twitter dat we te veel tweets opvragen,'+\
                          ' of bestaat het account niet. Kijk hier eens voor wat accounts die het altijd doen: '+\
                          '<a href="results/geertwilderspvv">geertwilderspvv</a>, <a href="results/sylviawitteman">sylviawitteman</a>, <a href="results/femkehalsema">femkehalsema</a>, <a href="results/willemhoIIeeder">willemhoIIeeder</a></span>',
                          logfile);
